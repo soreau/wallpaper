@@ -1030,7 +1030,9 @@ wallpaperDrawWindow (CompWindow           *w,
 
     WALLPAPER_SCREEN (w->screen);
 
-    if ((w->type & CompWindowTypeDesktopMask) && w->id != ws->fakeDesktop)
+    if ((w->type & CompWindowTypeDesktopMask) &&
+					w->id != ws->fakeDesktop &&
+					ws->nBackgrounds)
 		return TRUE;
 
     if (bg1 >= 0 && (!ws->desktop || ws->desktop == w) && ws->nBackgrounds && w->alpha &&
