@@ -696,6 +696,8 @@ wallpaperIncrementBackgrounds (void *closure)
 
 	ws->fading = TRUE;
 
+	damageScreen (s);
+
     return FALSE;
 }
 
