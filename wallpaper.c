@@ -844,11 +844,11 @@ wallpaperPreparePaintScreen (CompScreen *s,
 {
 	WALLPAPER_SCREEN (s);
 
-	if (!s->desktopWindowCount && ws->fakeDesktop == None
+	if (ws->fakeDesktop == None
 		&& ws->nBackgrounds)
 		createFakeDesktopWindow (s);
 
-	if ((s->desktopWindowCount > 1 || !ws->nBackgrounds)
+	if (!ws->nBackgrounds
 		&& ws->fakeDesktop != None)
 		destroyFakeDesktopWindow (s);
 
@@ -1029,6 +1029,9 @@ wallpaperDrawWindow (CompWindow           *w,
 	int bg1 = getBackgroundForViewport (s);
 
     WALLPAPER_SCREEN (w->screen);
+
+    if ((w->type & CompWindowTypeDesktopMask) && w->id != ws->fakeDesktop)
+		return TRUE;
 
     if (bg1 >= 0 && (!ws->desktop || ws->desktop == w) && ws->nBackgrounds && w->alpha &&
 	w->type & CompWindowTypeDesktopMask)
