@@ -92,7 +92,7 @@
 			<option name="fade_time" type="float">
 				<_short>Fade time</_short>
 				<_long>Fade transition time (in seconds).</_long>
-				<default>1.0</default>
+				<default>2.5</default>
 				<min>0.1</min>
 				<max>5.0</max>
 			</option>
