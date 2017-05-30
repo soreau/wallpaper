@@ -70,6 +70,7 @@ typedef struct _WallpaperScreen
 {
     PaintOutputProc      paintOutput;
     DrawWindowProc       drawWindow;
+    PaintWindowProc      paintWindow;
     DamageWindowRectProc damageWindowRect;
     PreparePaintScreenProc preparePaintScreen;
 
@@ -1018,6 +1019,30 @@ wallpaperPaintTex (CompWindow *w,
 }
 
 static Bool
+wallpaperPaintWindow (CompWindow		     *w,
+	     const WindowPaintAttrib *attrib,
+	     const CompTransform     *transform,
+	     Region		     region,
+	     unsigned int	     mask)
+{
+    Bool           status;
+
+    WALLPAPER_SCREEN (w->screen);
+
+    if ((w->type & CompWindowTypeDesktopMask) &&
+					w->id != ws->fakeDesktop &&
+					ws->nBackgrounds)
+		return FALSE;
+
+
+    UNWRAP (ws, w->screen, paintWindow);
+    status = (*w->screen->paintWindow) (w, attrib, transform, region, mask);
+    WRAP (ws, w->screen, paintWindow, wallpaperPaintWindow);
+
+    return status;
+}
+
+static Bool
 wallpaperDrawWindow (CompWindow           *w,
 		     const CompTransform  *transform,
 		     const FragmentAttrib *attrib,
@@ -1031,11 +1056,6 @@ wallpaperDrawWindow (CompWindow           *w,
 	int bg1 = getBackgroundForViewport (s);
 
     WALLPAPER_SCREEN (w->screen);
-
-    if ((w->type & CompWindowTypeDesktopMask) &&
-					w->id != ws->fakeDesktop &&
-					ws->nBackgrounds)
-		return TRUE;
 
     if (bg1 >= 0 && (!ws->desktop || ws->desktop == w) && ws->nBackgrounds && w->alpha &&
 	w->type & CompWindowTypeDesktopMask)
@@ -1238,6 +1258,7 @@ static Bool wallpaperInitScreen (CompPlugin *p,
 
     WRAP (ws, s, paintOutput, wallpaperPaintOutput);
     WRAP (ws, s, drawWindow, wallpaperDrawWindow);
+    WRAP (ws, s, paintWindow, wallpaperPaintWindow);
     WRAP (ws, s, damageWindowRect, wallpaperDamageWindowRect);
 	WRAP (ws, s, preparePaintScreen, wallpaperPreparePaintScreen);
 
@@ -1263,6 +1284,7 @@ static void wallpaperFiniScreen (CompPlugin *p,
 
     UNWRAP (ws, s, paintOutput);
     UNWRAP (ws, s, drawWindow);
+    UNWRAP (ws, s, paintWindow);
     UNWRAP (ws, s, damageWindowRect);
 	UNWRAP (ws, s, preparePaintScreen);
 
