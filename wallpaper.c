@@ -248,6 +248,7 @@ wallpaperSearchDirectory(CompScreen *s, char *path,
 			}
 		}
 	}
+	closedir (dir);
 }
 
 static void
