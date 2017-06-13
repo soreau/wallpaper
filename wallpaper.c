@@ -787,6 +787,21 @@ wallpaperOptionChanged (CompScreen             *s,
 				}
 			}
 			break;
+		case WallpaperScreenOptionHideOtherBackgrounds:
+			damageScreen (s);
+			if (wallpaperGetHideOtherBackgrounds (s))
+			{
+				CompWindow *w;
+				for (w = s->windows; w; w = w->next)
+				{
+					if ((w->type & CompWindowTypeDesktopMask) &&
+							w->id != ws->fakeDesktop)
+						XLowerWindow (s->display->display, w->id);
+				}
+			}
+			else
+				XLowerWindow (s->display->display, ws->fakeDesktop);
+			break;
 		case WallpaperScreenOptionBgImage:
 		case WallpaperScreenOptionBgImagePos:
 		case WallpaperScreenOptionBgFillType:
@@ -1038,7 +1053,8 @@ wallpaperPaintWindow (CompWindow		     *w,
 
     if ((w->type & CompWindowTypeDesktopMask) &&
 					w->id != ws->fakeDesktop &&
-					ws->nBackgrounds)
+					ws->nBackgrounds &&
+					wallpaperGetHideOtherBackgrounds (w->screen))
 		return FALSE;
 
 
@@ -1246,9 +1262,9 @@ static Bool wallpaperInitScreen (CompPlugin *p,
 	wallpaperSetBgFillTypeNotify (s, wallpaperOptionChanged);
 	wallpaperSetBgColor1Notify (s, wallpaperOptionChanged);
 	wallpaperSetBgColor2Notify (s, wallpaperOptionChanged);
-
 	wallpaperSetCycleTimeoutNotify (s, wallpaperOptionChanged);
 	wallpaperSetCycleNotify (s, wallpaperOptionChanged);
+	wallpaperSetHideOtherBackgroundsNotify (s, wallpaperOptionChanged);
 
 	s->base.privates[wd->screenPrivateIndex].ptr = ws;
 
@@ -1259,9 +1275,6 @@ static Bool wallpaperInitScreen (CompPlugin *p,
 			compAddTimeout (wallpaperGetCycleTimeout (s) * 60000,
 							wallpaperGetCycleTimeout (s) * 60000,
 							wallpaperIncrementBackgrounds, s);
-
-	if (!s->desktopWindowCount && ws->nBackgrounds)
-		createFakeDesktopWindow (s);
 
 	WRAP (ws, s, paintOutput, wallpaperPaintOutput);
 	WRAP (ws, s, drawWindow, wallpaperDrawWindow);
