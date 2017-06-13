@@ -11,7 +11,33 @@
 				<plugin>imgjpeg</plugin>
 			</relation>
 		</deps>
+		<display>
+			<option name="recursive" type="bool">
+				<_short>Recursive directory search</_short>
+				<_long>Search in all sub-directories.</_long>
+				<default>true</default>
+			</option>
+		</display>
 		<screen>
+			<option name="cycle" type="bool">
+				<_short>Cycle</_short>
+				<_long>Automatically cycle through wallpapers.</_long>
+				<default>true</default>
+			</option>
+			<option name="cycle_timeout" type="float">
+				<_short>Cycle timeout</_short>
+				<_long>Time before cycling to next wallpaper (in minutes).</_long>
+				<default>5.0</default>
+				<min>0.1</min>
+				<max>2880.0</max> <!-- 48 hrs -->
+			</option>
+			<option name="fade_time" type="float">
+				<_short>Fade time</_short>
+				<_long>Fade transition time (in seconds).</_long>
+				<default>2.5</default>
+				<min>0.1</min>
+				<max>5.0</max>
+			</option>
 			<subgroup>
 				<_short>Backgrounds</_short>
 				<option name="bg_image" type="list">
@@ -77,33 +103,7 @@
 					<type>color</type>
 				</option>
 			</subgroup>
-			<option name="cycle" type="bool">
-				<_short>Cycle</_short>
-				<_long>Automatically cycle through wallpapers.</_long>
-				<default>true</default>
-			</option>
-			<option name="cycle_timeout" type="float">
-				<_short>Cycle timeout</_short>
-				<_long>Time before cycling to next wallpaper (in minutes).</_long>
-				<default>5.0</default>
-				<min>0.1</min>
-				<max>2880.0</max> <!-- avoid overflow/48 hrs -->
-			</option>
-			<option name="fade_time" type="float">
-				<_short>Fade time</_short>
-				<_long>Fade transition time (in seconds).</_long>
-				<default>2.5</default>
-				<min>0.1</min>
-				<max>5.0</max>
-			</option>
 		</screen>
-		<display>
-			<option name="recursive" type="bool">
-				<_short>Recursive directory search</_short>
-				<_long>Search in all sub-directories.</_long>
-				<default>true</default>
-			</option>
-		</display>
 	</plugin>
 </compiz>
 
