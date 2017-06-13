@@ -18,7 +18,7 @@
 					<_short>Image</_short>
 					<_long>Image file.</_long>
 					<type>string</type>
-					<hints>path;image;</hints>
+					<hints>path;file;image;</hints>
 				</option>
 				<option name="bg_image_pos" type="list">
 					<_short>Position</_short>
