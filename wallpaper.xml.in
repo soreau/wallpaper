@@ -38,6 +38,11 @@
 				<min>0.1</min>
 				<max>5.0</max>
 			</option>
+			<option name="randomize" type="bool">
+				<_short>Randomize</_short>
+				<_long>Randomly order wallpapers.</_long>
+				<default>true</default>
+			</option>
 			<option name="hide_other_backgrounds" type="bool">
 				<_short>Hide other desktop background windows</_short>
 				<_long>Don't draw desktop backgrounds rendered by other applications. Mouse and keyboard input works as if the background were drawn.</_long>

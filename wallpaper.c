@@ -666,6 +666,24 @@ updateProperty(CompScreen *s)
 }
 
 static void
+wallpaperShuffle (WallpaperBackground *bgs, int n)
+{
+	WallpaperBackground tmp;
+	int i, j;
+
+	if (n < 2)
+		return;
+
+	for (i = 0; i < n - 1; ++i)
+	{
+		j = i + rand() / (RAND_MAX / (n - i) + 1);
+		tmp = bgs[j];
+		bgs[j] = bgs[i];
+		bgs[i] = tmp;
+	}
+}
+
+static void
 updateBackgrounds (CompScreen *s)
 {
 	WALLPAPER_SCREEN (s);
@@ -682,6 +700,9 @@ updateBackgrounds (CompScreen *s)
 						offsetof (WallpaperBackground, color1),
 						wallpaperGetBgColor2Option (s),
 						offsetof (WallpaperBackground, color2));
+
+	if (ws->nBackgrounds && wallpaperGetRandomize (s))
+		wallpaperShuffle (ws->backgrounds, ws->nBackgrounds);
 }
 
 static Bool
@@ -802,6 +823,7 @@ wallpaperOptionChanged (CompScreen             *s,
 			else
 				XLowerWindow (s->display->display, ws->fakeDesktop);
 			break;
+		case WallpaperScreenOptionRandomize:
 		case WallpaperScreenOptionBgImage:
 		case WallpaperScreenOptionBgImagePos:
 		case WallpaperScreenOptionBgFillType:
@@ -1264,6 +1286,7 @@ static Bool wallpaperInitScreen (CompPlugin *p,
 	wallpaperSetBgColor2Notify (s, wallpaperOptionChanged);
 	wallpaperSetCycleTimeoutNotify (s, wallpaperOptionChanged);
 	wallpaperSetCycleNotify (s, wallpaperOptionChanged);
+	wallpaperSetRandomizeNotify (s, wallpaperOptionChanged);
 	wallpaperSetHideOtherBackgroundsNotify (s, wallpaperOptionChanged);
 
 	s->base.privates[wd->screenPrivateIndex].ptr = ws;
